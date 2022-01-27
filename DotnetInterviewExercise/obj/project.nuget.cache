@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "FnaQz02CvNfRG+wFQ8oSmFnqpbgK+4KpkaQKmfBkgxVAPCE3ef3u/5MgAuNw6AwcvkpD7q5ggFIjhura8EggZQ==",
+  "success": true,
+  "projectFilePath": "C:\\src\\DotnetInterviewExercise\\DotnetInterviewExercise\\DotnetInterviewExercise.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\bdahl\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\3.1.21\\microsoft.netcore.app.host.win-x64.3.1.21.nupkg.sha512"
+  ],
+  "logs": []
+}
