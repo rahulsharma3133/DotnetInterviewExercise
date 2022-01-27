@@ -27,3 +27,5 @@ autom4te.cache/
 tarballs/
 test-results/
 Thumbs.db
+
+.vs/

@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31702.278
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotnetInterviewExercise", "DotnetInterviewExercise\DotnetInterviewExercise.csproj", "{F3F57699-6BD9-47A6-8410-1557817C9FF4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotnetInterviewExercise", "DotnetInterviewExercise\DotnetInterviewExercise.csproj", "{F3F57699-6BD9-47A6-8410-1557817C9FF4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotnetInterviewExercise.UnitTests", "DotnetInterviewExercise.UnitTests\DotnetInterviewExercise.UnitTests.csproj", "{0BE0882D-07BB-433A-AF0A-EF6C3938ACA7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{F3F57699-6BD9-47A6-8410-1557817C9FF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F3F57699-6BD9-47A6-8410-1557817C9FF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F3F57699-6BD9-47A6-8410-1557817C9FF4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0BE0882D-07BB-433A-AF0A-EF6C3938ACA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0BE0882D-07BB-433A-AF0A-EF6C3938ACA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0BE0882D-07BB-433A-AF0A-EF6C3938ACA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0BE0882D-07BB-433A-AF0A-EF6C3938ACA7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
