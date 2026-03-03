@@ -28,12 +28,13 @@ Welcome to the Alaska Airlines .NET coding exercise!
 
 ## Prompt
 
-Create an endpoint that takes a station id as an input and retrieves the latest weather information for that station.
+Create an endpoint that takes a station name as an input and retrieves the latest weather information for that station.
 
 ### Acceptance Criteria
 
 * Use the [National Weather Service API](https://www.weather.gov/documentation/services-web-api#/default/station_observation_list) to gather weather information.
 * The Station List can be retrieved from: https://api.weather.gov/stations?limit=100
+    * Station Name can be found at: `features[x].properties.name`
     * Station ID can be found at: `features[x].properties.stationIdentifier`
 * Current weather information can be retrieved from: https://api.weather.gov/stations/{StationID}/observations?limit=1
 
