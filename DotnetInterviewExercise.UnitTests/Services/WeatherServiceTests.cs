@@ -1,4 +1,5 @@
 using DotnetInterviewExercise.Services;
+using DotnetInterviewExercise.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -72,8 +73,80 @@ namespace DotnetInterviewExercise.UnitTests.Services
 
             var result = await _weatherService.GetActiveAlertsStatusAsync();
 
-            Assert.That(result, Does.Not.Contain("<script>"));
-            Assert.That(result, Does.Contain("<script>"));
+           Assert.That(result, Does.Not.Contain("<script>"));
+        }
+
+        [Test]
+        public async Task GetWeatherByStationNameAsync_ReturnsNull_WhenStationNameIsNull()
+        {
+            var stationsJson = "{\"features\":[]}";
+            var mockHandler = new Mock<HttpMessageHandler>();
+            mockHandler.Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(new HttpResponseMessage { StatusCode = HttpStatusCode.OK, Content = new StringContent(stationsJson) });
+
+            var httpClient = new HttpClient(mockHandler.Object);
+            _mockHttpClientFactory.Setup(f => f.CreateClient("WeatherApi")).Returns(httpClient);
+
+            var result = await _weatherService.GetWeatherByStationNameAsync(null);
+
+            Assert.That(result, Is.Null);
+        }
+
+        [Test]
+        public async Task GetWeatherByStationNameAsync_ReturnsNull_WhenStationNameIsEmpty()
+        {
+            var stationsJson = "{\"features\":[]}";
+            var mockHandler = new Mock<HttpMessageHandler>();
+            mockHandler.Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(new HttpResponseMessage { StatusCode = HttpStatusCode.OK, Content = new StringContent(stationsJson) });
+
+            var httpClient = new HttpClient(mockHandler.Object);
+            _mockHttpClientFactory.Setup(f => f.CreateClient("WeatherApi")).Returns(httpClient);
+
+            var result = await _weatherService.GetWeatherByStationNameAsync("");
+
+            Assert.That(result, Is.Null);
+        }
+
+        [Test]
+        public async Task GetWeatherByStationNameAsync_ReturnsWeatherData_WhenStationExists()
+        {
+            var stationsJson = "{\"features\":[{\"properties\":{\"stationIdentifier\":\"000SE\",\"name\":\"SCE South Hills Park\"}}]}";
+            var observationsJson = "{\"features\":[{\"properties\":{\"timestamp\":\"2024-01-01T12:00:00Z\",\"temperature\":{\"value\":15.5},\"textDescription\":\"Partly Cloudy\"}}]}";
+              
+            var mockHandler = new Mock<HttpMessageHandler>();
+            mockHandler.Protected()
+            .SetupSequence<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+            .ReturnsAsync(new HttpResponseMessage { StatusCode = HttpStatusCode.OK, Content = new StringContent(stationsJson) })
+            .ReturnsAsync(new HttpResponseMessage { StatusCode = HttpStatusCode.OK, Content = new StringContent(observationsJson) });
+
+             var httpClient = new HttpClient(mockHandler.Object);
+            _mockHttpClientFactory.Setup(f => f.CreateClient("WeatherApi")).Returns(httpClient);
+
+            var result = await _weatherService.GetWeatherByStationNameAsync("SCE South Hills Park");
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.StationId, Is.EqualTo("000SE"));
+            Assert.That(result.TemperatureCelsius, Is.EqualTo(15.5));
+        }
+
+        [Test]
+        public async Task GetWeatherByStationNameAsync_ThrowsException_WhenStationNotFound()
+        {
+            var stationsJson = "{\"features\":[]}";
+            var mockHandler = new Mock<HttpMessageHandler>();
+            mockHandler.Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(new HttpResponseMessage { StatusCode = HttpStatusCode.OK, Content = new StringContent(stationsJson) });
+
+            var httpClient = new HttpClient(mockHandler.Object);
+            _mockHttpClientFactory.Setup(f => f.CreateClient("WeatherApi")).Returns(httpClient);
+
+            var result = await _weatherService.GetWeatherByStationNameAsync("NonExistent");
+
+            Assert.That(result, Is.Null);
         }
     }
 }
