@@ -1,5 +1,6 @@
 ﻿using DotnetInterviewExercise.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 
 namespace DotnetInterviewExercise.Controllers
@@ -9,10 +10,12 @@ namespace DotnetInterviewExercise.Controllers
     public class HealthController : ControllerBase
     {
         private readonly IWeatherService _weatherService;
+        private readonly ILogger<HealthController> _logger;
 
-        public HealthController(IWeatherService weatherService)
+        public HealthController(IWeatherService weatherService, ILogger<HealthController> logger)
         {
             _weatherService = weatherService;
+            _logger = logger;
         }
 
         /// <summary>
@@ -27,6 +30,7 @@ namespace DotnetInterviewExercise.Controllers
         [HttpGet("ping")]
         public IActionResult Ping()
         {
+            _logger.LogInformation("Ping endpoint called");
             return Ok("Pong");
         }
 
@@ -42,6 +46,7 @@ namespace DotnetInterviewExercise.Controllers
         [HttpGet("alerts")]
         public async Task<IActionResult> ActiveAlerts()
         {
+            _logger.LogInformation("Active alerts endpoint called");
             var result = await _weatherService.GetActiveAlertsStatusAsync();
             return Ok(result);
         }

@@ -1,6 +1,7 @@
 ﻿using DotnetInterviewExercise.Controllers;
 using DotnetInterviewExercise.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using System.Threading.Tasks;
@@ -11,13 +12,15 @@ namespace DotnetInterviewExercise.UnitTests.Controllers
     public class HealthControllerTests
     {
         private Mock<IWeatherService> _mockWeatherService;
+        private Mock<ILogger<HealthController>> _mockLogger;
         private HealthController _controller;
 
         [SetUp]
         public void Setup()
         {
             _mockWeatherService = new Mock<IWeatherService>();
-            _controller = new HealthController(_mockWeatherService.Object);
+            _mockLogger = new Mock<ILogger<HealthController>>();
+            _controller = new HealthController(_mockWeatherService.Object, _mockLogger.Object);
         }
         [Test]
         public void Ping_ReturnsOkWithPong()
