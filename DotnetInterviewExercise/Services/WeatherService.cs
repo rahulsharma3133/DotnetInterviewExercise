@@ -9,8 +9,8 @@ namespace DotnetInterviewExercise.Services
 {
     public class WeatherService : IWeatherService
     {
-        public readonly IHttpClientFactory _httpClientFactory;
-        public readonly IConfiguration _configuration;
+        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly IConfiguration _configuration;
         private readonly ILogger<WeatherService> _logger;
 
         public WeatherService(IHttpClientFactory httpClientFactory, IConfiguration configuration, ILogger<WeatherService> logger)
