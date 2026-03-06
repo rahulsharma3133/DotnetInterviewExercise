@@ -1,7 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using System.Net;
-using System.Net.Http;
+﻿using DotnetInterviewExercise.Services;
+using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace DotnetInterviewExercise.Controllers
@@ -10,13 +8,11 @@ namespace DotnetInterviewExercise.Controllers
     [Route("health")]
     public class HealthController : ControllerBase
     {
-        private readonly HttpClient _httpClient;
-        private readonly IConfiguration _configuration;
+        private readonly IWeatherService _weatherService;
 
-        public HealthController(HttpClient httpClient, IConfiguration configuration)
+        public HealthController(IWeatherService weatherService)
         {
-            _httpClient = httpClient;
-            _configuration = configuration;
+            _weatherService = weatherService;
         }
 
         /// <summary>
@@ -46,19 +42,8 @@ namespace DotnetInterviewExercise.Controllers
         [HttpGet("alerts")]
         public async Task<IActionResult> ActiveAlerts()
         {
-            var uri = _configuration["API:WeatherBaseUrl"] + "/alerts/active/count";
-            var serviceRequest = new HttpRequestMessage(HttpMethod.Get, uri);
-            serviceRequest.Headers.Add("User-Agent", _configuration["API:UserAgent"]);
-            var response = await _httpClient.SendAsync(serviceRequest);
-
-            return new ContentResult
-            {
-                Content = response.StatusCode == HttpStatusCode.OK
-                    ? "Active Alerts OK"
-                    : await response.Content.ReadAsStringAsync(),
-                ContentType = "text/string",
-                StatusCode = (int)response.StatusCode
-            };
+            var result = await _weatherService.GetActiveAlertsStatusAsync();
+            return Ok(result);
         }
     }
 }

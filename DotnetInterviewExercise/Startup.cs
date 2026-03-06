@@ -3,12 +3,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi;
+using DotnetInterviewExercise.Services;
 using Swashbuckle.AspNetCore.SwaggerUI;
-using System;
-using System.IO;
-using System.Net.Http;
-using System.Reflection;
 
 namespace DotnetInterviewExercise
 {
@@ -25,19 +21,10 @@ namespace DotnetInterviewExercise
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddSwaggerGen(options =>
-            {
-                options.SwaggerDoc("v1", new OpenApiInfo
-                {
-                    Version = "v1",
-                    Title = "Alaska .NET Interview API"
-                });
+            services.AddSwaggerGen();
 
-                var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
-            });
-
-            services.AddSingleton<HttpClient>();
+            services.AddHttpClient("WeatherApi");
+            services.AddScoped<IWeatherService, WeatherService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -47,7 +34,6 @@ namespace DotnetInterviewExercise
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI();
                 app.UseSwaggerUI(c => {
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
                     c.DefaultModelRendering(ModelRendering.Model);
@@ -55,12 +41,14 @@ namespace DotnetInterviewExercise
                 });
             }
 
+            //Use HSTS for Production env
+            //Tell the browser to use HTTPS only
+            if(!env.IsDevelopment())
+               app.UseHsts();
+
             app.UseHttpsRedirection();
-
             app.UseRouting();
-
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

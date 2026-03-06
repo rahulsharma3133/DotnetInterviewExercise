@@ -1,24 +1,47 @@
 ﻿using DotnetInterviewExercise.Controllers;
+using DotnetInterviewExercise.Services;
 using Microsoft.AspNetCore.Mvc;
+using Moq;
 using NUnit.Framework;
-using System.Net;
+using System.Threading.Tasks;
 
 namespace DotnetInterviewExercise.UnitTests.Controllers
 {
     [TestFixture]
     public class HealthControllerTests
     {
-        [Test]
-        public void TestHealthPing()
+        private Mock<IWeatherService> _mockWeatherService;
+        private HealthController _controller;
+
+        [SetUp]
+        public void Setup()
         {
-            var controller = new HealthController(null, null);
+            _mockWeatherService = new Mock<IWeatherService>();
+            _controller = new HealthController(_mockWeatherService.Object);
+        }
+        [Test]
+        public void Ping_ReturnsOkWithPong()
+        {
+            var result = _controller.Ping();
+            var okResult = result as OkObjectResult;
 
-            var result = controller.Ping();
+            Assert.That(okResult, Is.Not.Null);
+            Assert.That(okResult.StatusCode, Is.EqualTo(200));
+            Assert.That(okResult.Value, Is.EqualTo("Pong"));
+        }
 
-            var objectResult = result as ObjectResult;
+        [Test]
+        public async Task ActiveAlerts_ReturnsOk_WhenServiceSucceeds()
+        {
+            _mockWeatherService.Setup(s => s.GetActiveAlertsStatusAsync())
+                .ReturnsAsync("Active Alerts OK");
 
-            Assert.That(objectResult.StatusCode, Is.EqualTo((int) HttpStatusCode.OK));
-            Assert.That(objectResult.Value.ToString().Contains("Pong"), Is.True);
+            var result = await _controller.ActiveAlerts();
+            var okResult = result as OkObjectResult;
+
+            Assert.That(okResult, Is.Not.Null);
+            Assert.That(okResult.StatusCode, Is.EqualTo(200));
+            Assert.That(okResult.Value, Is.EqualTo("Active Alerts OK"));
         }
     }
 }
